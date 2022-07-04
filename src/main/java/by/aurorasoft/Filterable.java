@@ -1,7 +1,6 @@
 package by.aurorasoft;
 
-public interface Filterable {
-    double getValue();
-    double getFiltered();
-    void setFiltered();
+public interface Filterable<TypeOfResult>
+{
+    public abstract TypeOfResult filter();
 }
