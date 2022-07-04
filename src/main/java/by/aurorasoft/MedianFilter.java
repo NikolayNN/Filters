@@ -45,7 +45,7 @@ public final class MedianFilter<TypeOfData extends Comparable<TypeOfData>>
         while(runnerIndexOfEndWindow < filteredObjectsWithDoubled.size())
         {
             contentOfCurrentWindow = filteredObjectsWithDoubled.subList(
-                    runnerIndexOfStartWindow, runnerIndexOfEndWindow);
+                    runnerIndexOfStartWindow, runnerIndexOfEndWindow + 1);
             currentWindow = new MedianFilter.Window<TypeOfData>(contentOfCurrentWindow);
             windows.add(currentWindow);
             runnerIndexOfStartWindow++;
@@ -63,7 +63,7 @@ public final class MedianFilter<TypeOfData extends Comparable<TypeOfData>>
         public Window(final List<TypeOfData> content)
         {
             super();
-            this.content = content;
+            this.content = new ArrayList<TypeOfData>(content);
             this.content.sort(Comparator.naturalOrder());
         }
 
