@@ -34,11 +34,9 @@ public final class MedianFilterTest
     }
 
     @Test
-    public final void emptyListShouldBeTransformed()
+    public final void emptyListShouldNotBeTransformed()
     {
         final List<Integer> filteredData = List.of();
-        final List<Integer> actualResult = this.medianFilter.filter(filteredData);
-        final List<Integer> expectedResult = List.of();
-        Assert.assertEquals(actualResult, expectedResult);
+        this.medianFilter.filter(filteredData);
     }
 }

@@ -2,9 +2,7 @@ package by.aurorasoft;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public final class MedianFilter<TypeOfData extends Comparable<TypeOfData>>
@@ -22,6 +20,7 @@ public final class MedianFilter<TypeOfData extends Comparable<TypeOfData>>
 
     public MedianFilter(final int sizeOfWindow)
     {
+        super();
         this.sizeOfWindow = sizeOfWindow;
     }
 
@@ -75,7 +74,7 @@ public final class MedianFilter<TypeOfData extends Comparable<TypeOfData>>
     }
 
     private static class Window<TypeOfData extends Comparable<? super TypeOfData>>
-            implements Filterable<TypeOfData>
+            implements Filter.Filterable<TypeOfData>
     {
         private final List<TypeOfData> content;
 
