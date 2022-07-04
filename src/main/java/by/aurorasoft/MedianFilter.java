@@ -70,7 +70,6 @@ public final class MedianFilter<TypeOfData extends Comparable<TypeOfData>>
         @Override
         public final TypeOfData filter()
         {
-            this.content.sort(Comparator.naturalOrder());
             final int indexOfResult = this.content.size() / 2;
             return this.content.get(indexOfResult);
         }
