@@ -48,6 +48,8 @@ public final class MedianFilter<TypeOfData extends Comparable<TypeOfData>>
                     runnerIndexOfStartWindow, runnerIndexOfEndWindow);
             currentWindow = new MedianFilter.Window<TypeOfData>(contentOfCurrentWindow);
             windows.add(currentWindow);
+            runnerIndexOfStartWindow++;
+            runnerIndexOfEndWindow++;
         }
 
         return windows.stream().map(MedianFilter.Window::filter).collect(Collectors.toList());
