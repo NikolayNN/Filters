@@ -14,6 +14,7 @@ public final class MedianFilter<TypeOfData extends Comparable<TypeOfData>>
 
     public MedianFilter()
     {
+        super();
         this.sizeOfWindow = MedianFilter.VALUE_OF_NOT_DEFINED_SIZE_OF_WINDOW;
     }
 
@@ -27,6 +28,19 @@ public final class MedianFilter<TypeOfData extends Comparable<TypeOfData>>
     @Override
     public final List<TypeOfData> filter(final List<TypeOfData> filteredObjects)
     {
+        if(filteredObjects.isEmpty())
+        {
+            return new ArrayList<TypeOfData>();
+        }
+        final List<TypeOfData> filteredObjectsWithDuplicatedBorders
+                = this.duplicateBorders(filteredObjects);
+        final List<MedianFilter.Window<TypeOfData>> windows = this.findWindows(
+                filteredObjectsWithDuplicatedBorders);
+        return windows.stream().map(MedianFilter.Window::filter).collect(Collectors.toList());
+    }
+
+    private List<TypeOfData> duplicateBorders(final List<TypeOfData> filteredObjects)
+    {
         final TypeOfData firstFilteredObject = filteredObjects.get(0);
         final TypeOfData lastFilteredObject = filteredObjects.get(filteredObjects.size() - 1);
 
@@ -35,6 +49,11 @@ public final class MedianFilter<TypeOfData extends Comparable<TypeOfData>>
         filteredObjectsWithDoubled.addAll(filteredObjects);
         filteredObjectsWithDoubled.add(lastFilteredObject);
 
+        return filteredObjectsWithDoubled;
+    }
+
+    private List<MedianFilter.Window<TypeOfData>> findWindows(final List<TypeOfData> filteredObject)
+    {
         final List<MedianFilter.Window<TypeOfData>> windows
                 = new ArrayList<MedianFilter.Window<TypeOfData>>();
 
@@ -42,9 +61,9 @@ public final class MedianFilter<TypeOfData extends Comparable<TypeOfData>>
         int runnerIndexOfEndWindow = this.sizeOfWindow - 1;
         List<TypeOfData> contentOfCurrentWindow;
         MedianFilter.Window<TypeOfData> currentWindow;
-        while(runnerIndexOfEndWindow < filteredObjectsWithDoubled.size())
+        while(runnerIndexOfEndWindow < filteredObject.size())
         {
-            contentOfCurrentWindow = filteredObjectsWithDoubled.subList(
+            contentOfCurrentWindow = filteredObject.subList(
                     runnerIndexOfStartWindow, runnerIndexOfEndWindow + 1);
             currentWindow = new MedianFilter.Window<TypeOfData>(contentOfCurrentWindow);
             windows.add(currentWindow);
@@ -52,7 +71,7 @@ public final class MedianFilter<TypeOfData extends Comparable<TypeOfData>>
             runnerIndexOfEndWindow++;
         }
 
-        return windows.stream().map(MedianFilter.Window::filter).collect(Collectors.toList());
+        return windows;
     }
 
     private static class Window<TypeOfData extends Comparable<? super TypeOfData>>
