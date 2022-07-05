@@ -101,49 +101,41 @@ public final class MedianFilterITTest {
 
     private static final String FILE_PATH_TO_WRITE_DATA = "./src/test/resources/data.csv";
 
-    private static class TwoDimensionalTuple<TypeOfFirst, TypeOfSecond>
-    {
+    private static class TwoDimensionalTuple<TypeOfFirst, TypeOfSecond> {
         private final TypeOfFirst first;
         private final TypeOfSecond second;
 
-        public TwoDimensionalTuple(final TypeOfFirst first, final TypeOfSecond second)
-        {
+        public TwoDimensionalTuple(final TypeOfFirst first, final TypeOfSecond second) {
             this.first = first;
             this.second = second;
         }
 
-        public final TypeOfFirst getFirst()
-        {
+        public final TypeOfFirst getFirst() {
             return this.first;
         }
 
-        public final TypeOfSecond getSecond()
-        {
+        public final TypeOfSecond getSecond() {
             return this.second;
         }
     }
 
     private static final class ThreeDimensionalTuple<TypeOfFirst, TypeOfSecond, TypeOfThird>
-            extends TwoDimensionalTuple<TypeOfFirst, TypeOfSecond>
-    {
+            extends TwoDimensionalTuple<TypeOfFirst, TypeOfSecond> {
         private final TypeOfThird third;
 
         public ThreeDimensionalTuple(final TwoDimensionalTuple<TypeOfFirst, TypeOfSecond> tuple,
-                                     final TypeOfThird third)
-        {
+                                     final TypeOfThird third) {
             super(tuple.getFirst(), tuple.getSecond());
             this.third = third;
         }
 
         public ThreeDimensionalTuple(final TypeOfFirst first, final TypeOfSecond second,
-                                     final TypeOfThird third)
-        {
+                                     final TypeOfThird third) {
             super(first, second);
             this.third = third;
         }
 
-        public TypeOfThird getThird()
-        {
+        public TypeOfThird getThird() {
             return this.third;
         }
     }
