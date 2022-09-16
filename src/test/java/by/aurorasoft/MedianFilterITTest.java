@@ -22,11 +22,22 @@ import java.util.stream.IntStream;
 @Test
 public final class MedianFilterITTest {
 
+    private static final String FILE_PATH_TO_READ_DATA = "./src/test/resources/t2.txt";
+    private static final String NEW_LINE_CHAR_SEQUENCE = "\r\n";
+    private static final String SYMBOLS_OF_COMMENT_LINE = "###";
+    private static final String LINE_COMPONENTS_SEPARATOR_REGEX = "( |\t)+";
+    private static final String DELIMITER_OF_DATE_AND_TIME = " ";
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter
+            .ofPattern("dd.MM.yyyy HH:mm:ss");
+    private static final int INDEX_OF_FILTERED_DATA_IN_COMPONENTS_OF_LINE = 3;
+    private static final String POINT_ANALOG_IN_DESCRIPTION_OF_FILTERED_DATA = ",";
+    private static final String POINT = ".";
+
+
     private List<TwoDimensionalTuple<LocalDateTime, Double>> dateTimeAndFilteredData;
 
     @BeforeClass
-    public void readFilteredData()
-            throws IOException {
+    public void readFilteredData() throws IOException {
         final Path path = Path.of(FILE_PATH_TO_READ_DATA);
         final byte[] readBytes = Files.readAllBytes(path);
         final String readText = new String(readBytes, StandardCharsets.UTF_8);
@@ -36,8 +47,7 @@ public final class MedianFilterITTest {
 
         this.dateTimeAndFilteredData = readLines.stream().filter((final String researchString) ->
                         !researchString.contains(SYMBOLS_OF_COMMENT_LINE))
-                .map((final String line) ->
-                {
+                .map((final String line) -> {
                     final String[] componentsOfLine = line.split(LINE_COMPONENTS_SEPARATOR_REGEX);
 
                     final String descriptionOfDateTime = componentsOfLine[0] + DELIMITER_OF_DATE_AND_TIME
@@ -54,21 +64,8 @@ public final class MedianFilterITTest {
                 }).collect(Collectors.toList());
     }
 
-    private static final String FILE_PATH_TO_READ_DATA = "./src/test/resources/t2.txt";
-    private static final String NEW_LINE_CHAR_SEQUENCE = "\r\n";
-    private static final String SYMBOLS_OF_COMMENT_LINE = "###";
-    private static final String LINE_COMPONENTS_SEPARATOR_REGEX = "( |\t)+";
-    private static final String DELIMITER_OF_DATE_AND_TIME = " ";
-    private static final String PATTERN_OF_DATE_TIME_FORMATTER = "dd.MM.yyyy HH:mm:ss";
-    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern(
-            PATTERN_OF_DATE_TIME_FORMATTER);
-    private static final int INDEX_OF_FILTERED_DATA_IN_COMPONENTS_OF_LINE = 3;
-    private static final String POINT_ANALOG_IN_DESCRIPTION_OF_FILTERED_DATA = ",";
-    private static final String POINT = ".";
-
     @Test
-    public void filteredDataShouldBeFilteredAndResultShouldWrittenInFile()
-            throws IOException {
+    public void filteredDataShouldBeFilteredAndResultShouldWrittenInFile() throws IOException {
         final List<Double> filteredData = new ArrayList<>();
         this.dateTimeAndFilteredData.forEach(tuple -> filteredData.add(tuple.getSecond()));
 
@@ -79,8 +76,7 @@ public final class MedianFilterITTest {
         final List<ThreeDimensionalTuple<LocalDateTime, Double, Double>> timesAndBeforeAndAfterFilteringData
                 = new ArrayList<>();
 
-        IntStream.range(0, dateTimeAndFilteredData.size()).forEach(rangeIndex ->
-        {
+        IntStream.range(0, dateTimeAndFilteredData.size()).forEach(rangeIndex -> {
             final ThreeDimensionalTuple<LocalDateTime, Double, Double> timeAndBeforeAndAfterFilteringData
                     = new ThreeDimensionalTuple<>(this.dateTimeAndFilteredData.get(rangeIndex),
                     filterResult.get(rangeIndex));
@@ -126,12 +122,6 @@ public final class MedianFilterITTest {
         public ThreeDimensionalTuple(final TwoDimensionalTuple<TypeOfFirst, TypeOfSecond> tuple,
                                      final TypeOfThird third) {
             super(tuple.getFirst(), tuple.getSecond());
-            this.third = third;
-        }
-
-        public ThreeDimensionalTuple(final TypeOfFirst first, final TypeOfSecond second,
-                                     final TypeOfThird third) {
-            super(first, second);
             this.third = third;
         }
 

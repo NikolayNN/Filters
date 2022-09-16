@@ -7,43 +7,41 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public final class MedianFilter<TypeOfData extends Comparable<? super TypeOfData>>
-        implements Filter<TypeOfData> {
-    private final int sizeOfWindow;
+public final class MedianFilter<T extends Comparable<? super T>> implements Filter<T> {
+
+    private static final int DEFAULT_WINDOW_SIZE = 3;
+    private final int windowSize;
 
     public MedianFilter() {
-        this.sizeOfWindow = VALUE_OF_NOT_DEFINED_SIZE_OF_WINDOW;
+        this.windowSize = DEFAULT_WINDOW_SIZE;
     }
 
-    private static final int VALUE_OF_NOT_DEFINED_SIZE_OF_WINDOW = 3;
-
-    public MedianFilter(final int sizeOfWindow) {
-        this.sizeOfWindow = sizeOfWindow % 2 != 0 ? sizeOfWindow : sizeOfWindow - 1;
+    public MedianFilter(final int windowSize) {
+        this.windowSize = windowSize % 2 != 0 ? windowSize : windowSize - 1;
     }
 
     @Override
-    public List<TypeOfData> filter(final List<TypeOfData> filteredObjects) {
-        if (filteredObjects.isEmpty()) {
+    public List<T> filter(final List<T> values) {
+        if (values.isEmpty()) {
             return Collections.emptyList();
         }
-        if (this.sizeOfWindow >= filteredObjects.size()) {
-            return filteredObjects;
+        if (this.windowSize >= values.size()) {
+            return values;
         }
 
-        final int amountOfDuplicatesOfEachBorder = this.sizeOfWindow / 2;
-        final List<TypeOfData> filteredObjectsWithDuplicatedBorders
-                = this.duplicateBorders(filteredObjects, amountOfDuplicatesOfEachBorder);
-        final List<MedianFilter.Window<TypeOfData>> windows = this.findWindows(
+        final int amountOfDuplicatesOfEachBorder = this.windowSize / 2;
+        final List<T> filteredObjectsWithDuplicatedBorders
+                = this.duplicateBorders(values, amountOfDuplicatesOfEachBorder);
+        final List<MedianFilter.Window<T>> windows = this.findWindows(
                 filteredObjectsWithDuplicatedBorders);
         return windows.stream().map(MedianFilter.Window::filter).collect(Collectors.toList());
     }
 
-    private List<TypeOfData> duplicateBorders(final List<TypeOfData> filteredObjects,
-                                              final int amountOfDuplicatesOfEachBorder) {
-        final TypeOfData firstFilteredObject = filteredObjects.get(0);
-        final TypeOfData lastFilteredObject = filteredObjects.get(filteredObjects.size() - 1);
+    private List<T> duplicateBorders(List<T> filteredObjects, int amountOfDuplicatesOfEachBorder) {
+        final T firstFilteredObject = filteredObjects.get(0);
+        final T lastFilteredObject = filteredObjects.get(filteredObjects.size() - 1);
 
-        final List<TypeOfData> filteredObjectsWithDuplicatedBorders = new ArrayList<>();
+        final List<T> filteredObjectsWithDuplicatedBorders = new ArrayList<>();
 
         IntStream.range(0, amountOfDuplicatesOfEachBorder).forEach(
                 rangeIndex -> filteredObjectsWithDuplicatedBorders.add(firstFilteredObject));
@@ -54,13 +52,13 @@ public final class MedianFilter<TypeOfData extends Comparable<? super TypeOfData
         return filteredObjectsWithDuplicatedBorders;
     }
 
-    private List<MedianFilter.Window<TypeOfData>> findWindows(final List<TypeOfData> filteredObject) {
-        final List<MedianFilter.Window<TypeOfData>> resultWindows = new ArrayList<>();
+    private List<MedianFilter.Window<T>> findWindows(List<T> filteredObject) {
+        final List<MedianFilter.Window<T>> resultWindows = new ArrayList<>();
 
         int runnerIndexOfStartWindow = 0;
-        int runnerIndexOfEndWindow = this.sizeOfWindow - 1;
-        List<TypeOfData> contentOfCurrentWindow;
-        MedianFilter.Window<TypeOfData> currentWindow;
+        int runnerIndexOfEndWindow = this.windowSize - 1;
+        List<T> contentOfCurrentWindow;
+        MedianFilter.Window<T> currentWindow;
         while (runnerIndexOfEndWindow < filteredObject.size()) {
             contentOfCurrentWindow = filteredObject.subList(
                     runnerIndexOfStartWindow, runnerIndexOfEndWindow + 1);
@@ -73,17 +71,18 @@ public final class MedianFilter<TypeOfData extends Comparable<? super TypeOfData
         return resultWindows;
     }
 
-    private static class Window<TypeOfData extends Comparable<? super TypeOfData>>
-            implements Filter.Filterable<TypeOfData> {
-        private final List<TypeOfData> content;
+    private static class Window<Type extends Comparable<? super Type>>
+            implements Filter.Filterable<Type> {
 
-        public Window(final List<TypeOfData> content) {
+        private final List<Type> content;
+
+        public Window(List<Type> content) {
             this.content = new ArrayList<>(content);
             this.content.sort(Comparator.naturalOrder());
         }
 
         @Override
-        public final TypeOfData filter() {
+        public final Type filter() {
             final int indexOfResult = this.content.size() / 2;
             return this.content.get(indexOfResult);
         }
