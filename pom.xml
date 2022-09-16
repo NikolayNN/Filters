@@ -63,7 +63,7 @@
                         <include>**/*</include>
                     </includes>
                     <repositoryName>Filters</repositoryName>
-                    <repositoryOwner>NikolayNN</repositoryOwner>
+                    <repositoryOwner>PrimaSoftLLC</repositoryOwner>
                 </configuration>
                 <executions>
                     <execution>
