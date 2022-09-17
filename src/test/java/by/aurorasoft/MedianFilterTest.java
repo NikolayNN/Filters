@@ -1,6 +1,6 @@
 package by.aurorasoft;
 
-import by.aurorasoft.filter.MedianFilter;
+import by.aurorasoft.filter.median.MedianFilter;
 import org.testng.annotations.Test;
 
 import java.util.List;

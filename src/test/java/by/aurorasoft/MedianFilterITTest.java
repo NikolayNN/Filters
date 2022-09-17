@@ -1,10 +1,9 @@
 package by.aurorasoft;
 
 import au.com.bytecode.opencsv.CSVWriter;
-import by.aurorasoft.filter.MedianFilter;
+import by.aurorasoft.filter.median.MedianFilter;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.testng.internal.collections.Pair;
 
 import java.io.FileWriter;
 import java.io.IOException;
