@@ -3,8 +3,8 @@ package by.aurorasoft.filter.median;
 import by.aurorasoft.filter.Filter;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static by.aurorasoft.ultils.ListUtils.addToEnd;
 import static by.aurorasoft.ultils.ListUtils.addToStart;
@@ -27,20 +27,21 @@ public class MedianFilter<T extends Comparable<T>> implements Filter<T> {
         if (values.isEmpty() || windowSize >= values.size()) {
             return values;
         }
-        return findWindows(addDuplicatesOnBorders(values))
-                .stream()
-                .map(Window::filteredValue)
-                .collect(Collectors.toList());
+        return doFilter(addDuplicatesOnBorders(values));
     }
 
-    private List<Window<T>> findWindows(List<T> values) {
-        List<Window<T>> result = new ArrayList<>();
-        int startIndex = 0;
-        int endIndex = this.windowSize - 1;
-        while (endIndex < values.size()) {
-            result.add(new Window<>(values.subList(startIndex++, ++endIndex)));
+    private List<T> doFilter(List<T> values) {
+        List<T> result = new ArrayList<>();
+        WindowIterator<T> iterator = new WindowIterator<>(values, windowSize);
+        while (iterator.hasNext()) {
+            result.add(getFilteredValue(iterator.next()));
         }
         return result;
+    }
+
+    private T getFilteredValue(List<T> window) {
+        window.sort(Comparator.naturalOrder());
+        return window.get(window.size() / 2);
     }
 
     private List<T> addDuplicatesOnBorders(List<T> values) {
