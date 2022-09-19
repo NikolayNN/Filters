@@ -1,5 +1,6 @@
 package by.aurorasoft.filter.median;
 
+import java.util.ArrayList;
 import java.util.List;
 
 class WindowIterator<T> {
@@ -19,6 +20,6 @@ class WindowIterator<T> {
     }
 
     List<T> next() {
-        return values.subList(startIndex++, ++endIndex);
+        return new ArrayList<>(values.subList(startIndex++, ++endIndex));
     }
 }

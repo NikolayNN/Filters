@@ -30,6 +30,15 @@ public final class MedianFilterTest {
     }
 
     @Test
+    public void list() {
+        final MedianFilter<Integer> filter = new MedianFilter<>(3);
+        final List<Integer> actual = filter.filter(List.of(100, 90, 80, 70, 60, 70, 80, 90, 100));
+        System.out.println(actual);
+        final List<Integer> expected = List.of(100, 90, 80, 70, 70, 70, 80, 90, 100);
+        assertEquals(actual, expected);
+    }
+
+    @Test
     public void listShouldBeFiltered() {
         final MedianFilter<Integer> filter = new MedianFilter<>(5);
         final List<Integer> actual = filter.filter(List.of(2, 80, 6, 3));
